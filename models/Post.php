@@ -3,7 +3,7 @@
 namespace amilna\blog\models;
 
 use Yii;
-
+use yii\behaviors\SluggableBehavior;
 
 /**
  * This is the model class for table "{{%blog_post}}".
@@ -42,7 +42,7 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description', 'content','status'], 'required'],
-            [['content', 'image'], 'string'],
+            [['content', 'image','alias'], 'string'],
             [['author_id', 'status', 'isdel'], 'integer'],
             [['isfeatured'], 'boolean'],
             [['tags','time'], 'safe'],
@@ -71,7 +71,17 @@ class Post extends \yii\db\ActiveRecord
             'time' => Yii::t('app', 'Time'),
             'isdel' => Yii::t('app', 'Isdel'),
         ];
-    }		
+    }
+
+	public function behaviors()
+	{
+	    return [
+		[
+		    'class' => SluggableBehavior::className(),
+		    'slugAttribute' => 'alias',
+		],
+	    ];
+	}
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
